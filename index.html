@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment App</title>
+    <style>
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+            padding:20px;
+        }
+        h2{
+            color:#333;
+        }
+        .box{
+            background:#fff;
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+        input,button{
+            padding:8px;
+            margin:5px;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+        th,td{
+            border:1px solid #ddd;
+            padding:8px;
+            text-align:center;
+        }
+        th{
+            background:#800080;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="box">
+    <h2>Login</h2>
+    <input type="text" id="email" placeholder="Enter Email">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+</div>
+
+<!-- PRODUCT CRUD -->
+<div class="box">
+    <h2>Product CRUD</h2>
+    <input type="text" id="pname" placeholder="Name">
+    <input type="number" id="pprice" placeholder="Price">
+    <input type="number" id="pqty" placeholder="Qty">
+    <button onclick="addProduct()">Add</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+    </table>
+</div>
+
+<!-- EMPLOYEE FILTER -->
+<div class="box">
+    <h2>Employee Filter</h2>
+    <button onclick="filterSalary()">Salary > 30000</button>
+    <button onclick="sortName()">Sort by Name</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Salary</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody id="empTable"></tbody>
+    </table>
+</div>
+
+<script>
+
+// LOGIN
+function login(){
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    if(!email.includes("@") || !email.includes(".")){
+        document.getElementById("loginMsg").innerText = "Invalid Email!";
+        return;
+    }
+
+    if(password.length < 6){
+        document.getElementById("loginMsg").innerText = "Password must be 6+ chars";
+        return;
+    }
+
+    document.getElementById("loginMsg").innerText = "Login Successful!";
+}
+
+// PRODUCT CRUD
+let products = [];
+
+function addProduct(){
+    let name = pname.value;
+    let price = pprice.value;
+    let qty = pqty.value;
+
+    products.push({name,price,qty});
+    displayProducts();
+}
+
+function deleteProduct(index){
+    products.splice(index,1);
+    displayProducts();
+}
+
+function displayProducts(){
+    let table = document.getElementById("productTable");
+    table.innerHTML="";
+
+    products.forEach((p,i)=>{
+        table.innerHTML += `
+        <tr>
+            <td>${p.name}</td>
+            <td>${p.price}</td>
+            <td>${p.qty}</td>
+            <td><button onclick="deleteProduct(${i})">Delete</button></td>
+        </tr>`;
+    });
+}
+
+// EMPLOYEES
+let employees = [
+    {name:"Arun", salary:35000, dept:"IT"},
+    {name:"Bala", salary:25000, dept:"HR"},
+    {name:"Cathy", salary:40000, dept:"IT"}
+];
+
+function displayEmployees(list){
+    let table = document.getElementById("empTable");
+    table.innerHTML="";
+
+    list.forEach(e=>{
+        table.innerHTML += `
+        <tr>
+            <td>${e.name}</td>
+            <td>${e.salary}</td>
+            <td>${e.dept}</td>
+        </tr>`;
+    });
+}
+
+displayEmployees(employees);
+
+function filterSalary(){
+    let filtered = employees.filter(e=>e.salary>30000);
+    displayEmployees(filtered);
+}
+
+function sortName(){
+    let sorted = [...employees].sort((a,b)=>a.name.localeCompare(b.name));
+    displayEmployees(sorted);
+}
+
+</script>
+
+</body>
+</html>
